@@ -42,11 +42,12 @@ async def on_message(message):
 
         if message.content.startswith('!setPlayers'):
             params = message.content.split(' ')[1:]
-            lg = lg_store.get(params[0], None) or baseballstats.League(params[0])
+            lg = lg_store.get(params[0], None) or baseballstats.League(params[0]) 
             teamName = params[1]
-            players = [x.strip() for x in ' '.join(params[2:]).split(',')]
-            lg.setPlayers(teamName, players)
-            await message.channel.send('Players set')
+            players = [x.strip() for x in ' '.join(params[2:]).split(',')] # Note: first player must be pitcher
+            lg.setPitcher(teamName, players[0]) # Set pitcher separately
+            lg.setPlayers(teamName, players[1:]) # Include pitcher hitting stats? 
+            await message.channel.send('Players set. Pitcher: ' + players[0]) # Tell people who they picked as their pitcher
 
         if message.content.startswith('!setPitcher'):
             params = message.content.split(' ')[1:]
